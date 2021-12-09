@@ -57,7 +57,7 @@ def rgb_bayer():
                     else:
                         Image_bayer[i][j]=Image_array[i][j][0]  #r
     Image_bayer.tofile('output %dX%d%s.txt'% (shape[0],shape[1],bayer_type[bayer_style]))
-    Image_pic=Image.fromarray(Image_bayer)
+    Image_pic=Image.fromarray(np.uint8(Image_bayer))
     Image_pic.show()    
     
     Image_pic.save('output %dX%d%s.gif'% (shape[0],shape[1],bayer_type[bayer_style]))  

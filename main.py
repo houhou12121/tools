@@ -1,6 +1,8 @@
 import psnr
 import ssim
 import rgb_bayer_ssim
+from PIL import Image
+import numpy as np
 
 if __name__ == "__main__":
     #produce different kinds of bayers
@@ -11,8 +13,9 @@ if __name__ == "__main__":
     img1=np.array(img1)
     img2=np.array(img2)
     psnr=psnr.psnr2(img1,img2)
+    print(psnr)
     #calculate ssim
-    print(compute_ssim(img1,img2))
+    print(ssim.compute_ssim(img1,img2))
 
 
     
