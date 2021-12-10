@@ -1,5 +1,5 @@
 # tools description
-1)produce bayer images from sRGB
+1)produce bayer images(bayer image gif、and bin flie) from sRGB
 
 2)compare psnr and ssim between two images
 
@@ -9,6 +9,6 @@ pip install scipy
 
 # tools using
 
-git clone gitaddress
+git clone git_address
 
 python main.py
