@@ -7,6 +7,7 @@ def rgb_bayer():
     bayer_style=bayer_list[0]
     image = Image.open('input.jpg')
     Image_array = np.array(image)
+    Image_array=Image_array**2.2 #gamma反变换（恢复到线性空间）
     #print(Image_array[700][100][1])
     shape=Image_array.shape
     Image_bayer=np.zeros((shape[0],shape[1]),dtype=int)
@@ -57,6 +58,8 @@ def rgb_bayer():
                     else:
                         Image_bayer[i][j]=Image_array[i][j][0]  #r
     Image_bayer.tofile('output %dX%d%s.txt'% (shape[0],shape[1],bayer_type[bayer_style]))
+    
+    Image_bayer=Image_bayer**(1/2.2)#gamma矫正，用作显示
     Image_pic=Image.fromarray(np.uint8(Image_bayer))
     Image_pic.show()    
     
