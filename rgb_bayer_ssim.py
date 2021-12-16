@@ -1,16 +1,18 @@
 from PIL import Image  
 import numpy as np  
+import os
 
-def rgb_bayer():
+
+def rgb_bayer(imge_pic):
     bayer_list=[0,1,2,3]#rggb、grbg、gbrg、bggr
     bayer_type=['rggb','grbg','gbrg','bggr']
     bayer_style=bayer_list[0]
-    image = Image.open('input.jpg')
+    image = Image.open(imge_pic)
     Image_array = np.array(image)
-    Image_array=Image_array**2.2 #gamma反变换（恢复到线性空间）
+    Image_array=((Image_array/255)**2.2) #gamma反变换（恢复到线性空间）
     #print(Image_array[700][100][1])
     shape=Image_array.shape
-    Image_bayer=np.zeros((shape[0],shape[1]),dtype=int)
+    Image_bayer=np.zeros((shape[0],shape[1]),dtype=float)
     for i in range(shape[0]):
         for j in range(shape[1]):
             if bayer_style==0:
@@ -57,18 +59,31 @@ def rgb_bayer():
                         Image_bayer[i][j]=Image_array[i][j][1]  #g
                     else:
                         Image_bayer[i][j]=Image_array[i][j][0]  #r
-    Image_bayer.tofile('output %dX%d%s.txt'% (shape[0],shape[1],bayer_type[bayer_style]))
-    
+    Image_bayer_bin=np.uint8(Image_bayer*1024)                  
+    Image_bayer_bin.tofile('./output_pictures/output_bin/{} %dX%d%s.bin'.format(imge_pic[17:-4]) % (shape[0],shape[1],bayer_type[bayer_style]))
     Image_bayer=Image_bayer**(1/2.2)#gamma矫正，用作显示
+    Image_bayer=Image_bayer*255
+    
+    print(Image_bayer)
     Image_pic=Image.fromarray(np.uint8(Image_bayer))
+    
     Image_pic.show()    
     
-    Image_pic.save('output %dX%d%s.gif'% (shape[0],shape[1],bayer_type[bayer_style]))  
+    Image_pic.save('./output_pictures/{} %dX%d%s.gif'.format(imge_pic[17:-4])% (shape[0],shape[1],bayer_type[bayer_style]))  
+
+def read_filelist(addr):  
+    imgs=[]
+    if addr[-4:]=='txt':           #if txt style filelist
+        f=open(addr,'r')
+        for line in f:
+            line=line.strip('\n')
+            imgs.append(line)
+    else:                          #if addr is just a directory
+        imgs=os.listdir(addr)
+    for i in imgs:
+        rgb_bayer(addr+i)
 
 
 if __name__=='__main__':
-    rgb_bayer()
-
-
-
+    read_filelist('./input_pictures/')
 
